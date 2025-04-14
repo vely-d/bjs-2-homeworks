@@ -27,7 +27,7 @@ class AlarmClock {
         let now = new Date();
         let hours = now.getHours();
         let minutes = now.getMinutes();
-        return `${hours}:${minutes}`;
+        return `${"0".repeat(hours < 10) + hours}:${"0".repeat(minutes < 10) + minutes}`;
     }
 
     async start() {
