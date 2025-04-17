@@ -15,12 +15,7 @@ class AlarmClock {
     }
 
     removeClock(time) {
-        let alarmIndex = this.alarmCollection.findIndex(alarm => alarm.time === time);
-        
-        while(alarmIndex !== -1) {
-            this.alarmCollection.splice(alarmIndex, 1);
-            alarmIndex = this.alarmCollection.findIndex(alarm => alarm.time === time);
-        }
+        this.alarmCollection = this.alarmCollection.filter(alarm => alarm.time !== time);
     }
 
     getCurrentFormattedTime() {
@@ -34,14 +29,16 @@ class AlarmClock {
         if (this.intervalId) {
             return;
         }
-        this.intervalId = setInterval(
-            this.alarmCollection.forEach(alarm => {
-                if (alarm.canCall && alarm.time === this.getCurrentFormattedTime()) {
-                    alarm.callback();
-                    alarm.canCall = false;
-                }
-            }),
-            1000);
+        this.intervalId = setInterval(() => { this._itetateThroughAlarms(); }, 1000);
+    }
+    
+    _itetateThroughAlarms() {
+        this.alarmCollection.forEach(alarm => {
+            if (alarm.canCall && alarm.time === this.getCurrentFormattedTime()) {
+                alarm.canCall = false;
+                alarm.callback();
+            }
+        });
     }
 
     stop() {
